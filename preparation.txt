@@ -1,0 +1,11 @@
+1. Isi $autoload['libraries'] = array('database'); di config/autoload.php
+2. Isi $config['base_url'] = 'http://localhost/ci-app/'; di config/config.php
+3. Isi $route['default_controller'] = 'home'; di config/routes.php
+4. Lengkapi $db['default'] = array() di config/database.php
+5. Happy Coding! :)
+
+Catatan :
+1. Setiap membuat views alangkah baiknya dibuatkan folder agar rapih
+2. Pisahkan header dan footer HTML ke dalam folder templates
+3. Buat satu file di controller dan models untuk setiap folder di dalam views
+(Misal: views/mahasiswa === controllers/Mahasiswa.php && models/Mahasiswa_model.php)
