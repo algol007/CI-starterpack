@@ -23,6 +23,9 @@ class Mahasiswa extends CI_Controller {
         //menampilkan semua data mahasiswa (refer to models)
         $data['mahasiswa'] = $this->Mahasiswa_model->getAllMahasiswa();
 
+        if( $this->input->post('keyword') ){
+            $data['mahasiswa'] = $this->Mahasiswa_model->searchMahasiswa();
+        }
         //header HTML
         $this->load->view('templates/header', $data);
 
@@ -71,4 +74,51 @@ class Mahasiswa extends CI_Controller {
         redirect('mahasiswa');
 
     }
+
+    public function detail_mahasiswa($id_mahasiswa){
+        //mengubah title yang ada pada header HTML
+        $data['title'] = 'Detail Data Mahasiswa';
+
+        //menampilkan data mahasiswa sesuai id (refer to models)
+        $data['mahasiswa'] = $this->Mahasiswa_model->getMahasiswaById($id_mahasiswa);
+
+        //header HTML
+        $this->load->view('templates/header', $data);
+
+        //body HTML
+        $this->load->view('mahasiswa/detail_mahasiswa', $data);
+
+        //footer HTML
+        $this->load->view('templates/footer');        
+    }
+
+	public function edit_mahasiswa($id_mahasiswa)
+	{
+        //mengubah title yang ada pada header HTML
+        $data['title'] = 'Edit Data Mahasiswa';
+        $data['mahasiswa'] = $this->Mahasiswa_model->getMahasiswaById($id_mahasiswa);
+        $data['jurusan'] = ['Teknik Informatika', 'Teknik Kimia', 'Teknik Mesin', 'Teknik Elektro', 'Teknik Sipil'];
+
+        //validasi setiap field yang ada pada form
+        $this->form_validation->set_rules('nama', 'Nama', 'required');
+        $this->form_validation->set_rules('nim', 'NIM', 'required|numeric');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+
+        //validasi form yang sudah dibuat menggunakan libary form_validation
+        if ( $this->form_validation->run() == FALSE ){
+            $this->load->view('templates/header', $data);
+            $this->load->view('mahasiswa/edit_mahasiswa', $data);
+            $this->load->view('templates/footer');    
+        } else {
+            // tambah mahasiswa (refer to models)
+            $this->Mahasiswa_model->edit_mahasiswa();
+
+            // menampilkan alert mahasiswa berhasil ditambahkan
+            $this->session->set_flashdata('flashdata', 'diedit');
+
+            //redirect ke halaman mahasiswa
+            redirect('mahasiswa');
+        }
+    }
+
 }
